@@ -9,11 +9,7 @@ function GridColumn({ column, handlePlaceToken, grid, columnKey }) {
   }
 
   return (
-    <div
-      key={columnKey}
-      className="grid-column"
-      onClick={() => handlePlaceToken(columnKey)}
-    >
+    <div className="grid-column" onClick={() => handlePlaceToken(columnKey)}>
       {columnArray}
     </div>
   );

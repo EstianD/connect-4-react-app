@@ -32,8 +32,6 @@ function App() {
   }
 
   function handlePlaceToken(col) {
-    console.log(col);
-
     // If game is active, set token
     if (gameActive) {
       const gridArray = [...grid];
@@ -64,7 +62,8 @@ function App() {
         checkColumnMatch(col, playerValue);
         checkRowMatch(selectedIndex, playerValue); //Pass in row
 
-        // checkDiagonalMatch(playerValue);
+        checkDiagonalRightMatch(playerValue);
+        checkDiagonalLeftMatch(playerValue);
         // Change turns
         changeTurns();
       }
@@ -74,9 +73,6 @@ function App() {
   // Check winning conditions
   // column win = 4 consecutive blocks in the same column
   function checkColumnMatch(col, player) {
-    console.log("col: ", col);
-    console.log("player: ", player);
-
     for (let row = 0; row <= grid.length - 4; row++) {
       if (
         grid[col][row] === player &&
@@ -108,19 +104,39 @@ function App() {
     }
   }
 
-  function checkDiagonalMatch(player) {
+  function checkDiagonalRightMatch(player) {
     // loop through the column until 4 blocks smaller than the roof
-    for (let col = 0; col <= grid.length - 1; col++) {
+    for (let col = 0; col <= grid.length - 4; col++) {
       // Loop through the rows in each column until 4 smaller than the roof
-      for (let row = 0; row <= grid.length - 1; row++) {
-        // Check for upper bound
+      for (let row = 0; row <= grid.length - 4; row++) {
+        // Check for diagonal right
         if (
           grid[col][row] === player &&
-          grid[col + 1][row - 1] === player &&
-          grid[col + 2][row - 2] === player &&
-          grid[col + 3][row - 3] === player
+          grid[col + 1][row + 1] === player &&
+          grid[col + 2][row + 2] === player &&
+          grid[col + 3][row + 3] === player
         ) {
-          console.log(`${player} wins`);
+          setGameWinner(player);
+          setGameActive(false);
+          break;
+        }
+      }
+    }
+  }
+
+  function checkDiagonalLeftMatch(player) {
+    for (let col = grid.length - 1; col >= grid.length - 4; col--) {
+      // Loop through the rows in each column until 4 smaller than the roof
+      for (let row = 0; row <= grid.length - 4; row++) {
+        if (
+          grid[col][row] === player &&
+          grid[col - 1][row + 1] === player &&
+          grid[col - 2][row + 2] === player &&
+          grid[col - 3][row + 3] === player
+        ) {
+          setGameWinner(player);
+          setGameActive(false);
+          break;
         }
       }
     }
@@ -140,6 +156,7 @@ function App() {
             handlePlaceToken={handlePlaceToken}
             grid={grid}
             columnKey={c}
+            key={c}
           />
         ))}
       </div>
